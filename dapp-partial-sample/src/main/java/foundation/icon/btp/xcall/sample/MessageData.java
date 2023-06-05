@@ -10,7 +10,6 @@ import java.math.BigInteger;
 public class MessageData {
     private final BigInteger id;
     private final String message;
-    private BigInteger ssn;
     private final String sender;
     private final String recipient;
     private int offset;
@@ -39,19 +38,16 @@ public class MessageData {
         return message;
     }
 
-    public BigInteger getSvcSn() {
-        return ssn;
-    }
 
-    public void setSvcSn(BigInteger ssn) {
-        this.ssn = ssn;
-    }
 
     public static void writeObject(ObjectWriter w, MessageData data) {
         w.beginList(3);
         w.write(data.id);
         w.write(data.message);
-        w.writeNullable(data.ssn);
+        w.write(data.sender);
+        w.write(data.recipient);
+        w.write(data.offset);
+        w.write(data.length);
         w.end();
     }
 
@@ -65,7 +61,6 @@ public class MessageData {
                 r.readInt(),
                 r.readInt()
         );
-        rbData.setSvcSn(r.readNullable(BigInteger.class));
         r.end();
         return rbData;
     }
@@ -81,26 +76,4 @@ public class MessageData {
         return readObject(reader);
     }
 
-    // @Override
-    // public boolean equals(Object obj) {
-    //     if (this == obj) {
-    //         return true;
-    //     } else if (!(obj instanceof MessageData)) {
-    //         return false;
-    //     } else {
-    //         MessageData other = (MessageData) obj;
-    //         if (this.message == null || other.message == null) {
-    //             return false;
-    //         }
-    //         if (this.message.length != other.message.length) {
-    //             return false;
-    //         }
-    //         for (int i = 0; i < this.message.length; i++) {
-    //             if (this.message[i] != other.message[i]) {
-    //                 return false;
-    //             }
-    //         }
-    //         return true;
-    //     }
-    // }
 }
